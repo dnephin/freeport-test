@@ -29,7 +29,7 @@ func RunTestConflicts(t TestingT, pkgName string, batchSize int) {
 
 	seed := time.Now().UnixNano()
 	t.Logf("seed %v", seed)
-	rnd := rand.New(rand.New(rand.NewSource(seed)))
+	rnd := rand.New(rand.NewSource(seed))
 
 	for i := 0; i < j; i++ {
 		i := i
