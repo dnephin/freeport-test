@@ -57,7 +57,7 @@ func RunTestConflicts(t TestingT, pkgName string, batchSize int) {
 					}
 				}
 				freeport.Return(ports)
-				time.Sleep(time.Duration(holdDuration + rnd.Int63n(loopDuration)))
+				time.Sleep(time.Duration(loopDuration + rnd.Int63n(loopDuration)))
 			}
 			return nil
 		})
@@ -70,13 +70,17 @@ func RunTestConflicts(t TestingT, pkgName string, batchSize int) {
 						return err
 					}
 
-					t.Logf("zero %v %v: %v", pkgName, i, l.Addr())
+					_, port, err := net.SplitHostPort(l.Addr().String())
+					if err != nil {
+						return err
+					}
+					t.Logf("zero %v %v: %v", pkgName, i, port)
 					time.Sleep(time.Duration(holdDuration + rnd.Int63n(holdDuration)))
 
 					if err := l.Close(); err != nil {
 						return err
 					}
-					time.Sleep(time.Duration(holdDuration + rnd.Int63n(loopDuration)))
+					time.Sleep(time.Duration(loopDuration + rnd.Int63n(loopDuration)))
 				}
 				return nil
 			})
