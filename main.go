@@ -20,7 +20,7 @@ type TestingT interface {
 func RunTestConflicts(t TestingT, pkgName string, batchSize int) {
 	g, ctx := errgroup.WithContext(context.Background())
 
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 100*time.Second)
 	defer cancel()
 
 	var holdDuration = int64(200 * time.Millisecond)
@@ -44,7 +44,9 @@ func RunTestConflicts(t TestingT, pkgName string, batchSize int) {
 				listeners := make([]net.Listener, len(ports))
 				for i, port := range ports {
 					l, err := net.Listen("tcp", net.JoinHostPort("127.0.0.1", strconv.Itoa(port)))
-					assert.NilError(t, err)
+					if err != nil {
+						return err
+					}
 					listeners[i] = l
 				}
 				time.Sleep(time.Duration(holdDuration + rnd.Int63n(holdDuration)))
